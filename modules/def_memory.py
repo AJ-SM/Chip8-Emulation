@@ -14,6 +14,7 @@ no_keys:int = 16
 memory = np.array(max_memo*1024).astype(np.uint8)
 stack = np.array(stackLength).astype(np.uint8)
 hex_keypad = np.array(16)
+opcode = 0000
 
 ''' since we only need to point form 0 ~ 4095 *(000~FFF) using 16bits is bit waste of memory
     because 12bits which we need not there in nmpy..'''
