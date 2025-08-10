@@ -1,0 +1,32 @@
+import numpy as np 
+from typing import * # Remove this to specifinces Before Pushing anywhere 
+
+# Some CPU sepcific initial data
+max_memo:int = 4
+no_regs:int = 16
+
+''' Why uint8 ?
+    Since our Each Instruction is of 1 byte (8bits) so we need some data type to store 2^8 (256) 
+    instruction and uint8 = UnsignedIntegerOf8bits (0~255)- (00~FF) seems to be the great choice  '''
+
+memory = np.array(max_memo*1024).astype(np.uint8)
+
+''' since we only need to point form 0 ~ 4095 *(000~FFF) using 16bits is bit waste of memory
+    because 12bits which we need not there in nmpy..'''
+
+reg_index= np.uint16(0)
+reg_pc= np.uint16(0) 
+
+
+'''
+        0x000-0x1FF - Chip 8 interpreter (contains font set in emu)
+        0x050-0x0A0 - Used for the built in 4x5 pixel font set (0-F)
+        0x200-0xFFF - Program ROM and work RAM
+
+'''
+
+
+
+print(type(reg_index))
+
+# Quick Note : Everything over here is zero Indexed
