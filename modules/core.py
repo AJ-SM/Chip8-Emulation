@@ -9,6 +9,9 @@ class Chip8():
         self.sp = reg_stackPointer
         self.memory = memory
         self.chipfontset = [1,12]
+        # also including timers
+        self.sound_timer = reg_soundTimer
+        self.delay_timer = reg_delayTimer
 
 
 
@@ -30,6 +33,33 @@ class Chip8():
         ''' Now the actual fun begines FED cycle reading first 45 bits of 
             the program finding the means the opcode and perfroming the 
             instruction given in the opcode'''
+    
+    
+    def loadfontset(self):
+        ''' Have to load the font-set into memory so that we can read the font and render it..'''
+        fontset = [
+            0xF0, 0x90, 0x90, 0x90, 0xF0,  # 0
+            0x20, 0x60, 0x20, 0x20, 0x70,  # 1
+            0xF0, 0x10, 0xF0, 0x80, 0xF0,  # 2
+            0xF0, 0x10, 0xF0, 0x10, 0xF0,  # 3
+            0x90, 0x90, 0xF0, 0x10, 0x10,  # 4
+            0xF0, 0x80, 0xF0, 0x10, 0xF0,  # 5
+            0xF0, 0x80, 0xF0, 0x90, 0xF0,  # 6
+            0xF0, 0x10, 0x20, 0x40, 0x40,  # 7
+            0xF0, 0x90, 0xF0, 0x90, 0xF0,  # 8
+            0xF0, 0x90, 0xF0, 0x10, 0xF0,  # 9
+            0xF0, 0x90, 0xF0, 0x90, 0x90,  # A
+            0xE0, 0x90, 0xE0, 0x90, 0xE0,  # B
+            0xF0, 0x80, 0x80, 0x80, 0xF0,  # C
+            0xE0, 0x90, 0x90, 0x90, 0xE0,  # D
+            0xF0, 0x80, 0xF0, 0x80, 0xF0,  # E
+            0xF0, 0x80, 0xF0, 0x80, 0x80   # F
+        ]
+        
+        # loading the font into memory for location 0x000
+        for i in range(len(fontset)):
+            self.memory[i]=fontset[i]
+    
         
 
         
@@ -53,11 +83,34 @@ class Chip8():
         
         # Feteching the opcode and create 16 bit form  2 * 8 bit..
         self.opcode = self.memory[pc]<<8 | self.memory[pc+1]
-        # Decoding OpCode.. 
-        self.var = opcode & 0xF000
+        self.Decode_Execute(opcode)
 
-        if(self.var == hex(0xa000)):
-            
+        if self.sound_timer >0:
+            if self.sound_timer ==1:
+                print("SOUND BAJJA !!")
+            self.sound_timer-=1
+        
+        if self.delay_timer >0:
+            self.delay_timer -=1
+
+
+        # Decoding OpCode.. 
+    
+    def Decode_Execute(self,opcode):
+        ''' Decoding the following opcode into all of the nibbles'''
+        X = opcode & 0x0F00 >>8
+        Y = opcode & 0x00F0 >>4
+        N = opcode & 0x000F
+        NN = opcode & 0x00FF
+        NNN = opcode & 0x0FFF
+        # Moving the coundter 
+        self.pc +=2
+        first_nibble = opcode & 0xF000
+
+        # Execution Begins
+
+        
+
 
 
         pass
