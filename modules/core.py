@@ -13,7 +13,7 @@ class Chip8():
 
 
     def reset(self):
-        self.pc = 0x200
+        self.pc = hex(0x200)
         self.opcode = 0 
         self.I=0
         self.sp=0
@@ -23,7 +23,7 @@ class Chip8():
         # todos :  Clear memory
         # todos : loading fontset 
         for i in range(80):
-            memory[i]=self.chipfontset[i]
+            self.memory[i]=self.chipfontset[i]
         # todos :  reset timers
     
     def emulateCycle(self):
@@ -39,17 +39,27 @@ class Chip8():
             memory address 0x200 (512) onward just iterating on the file and storing 
             the data in memory '''
         
-        rom_data = open(path)
-        for i in range(len(rom_data)):
-            memory[i+512] = rom_data[i]
+        self.rom_data = open(path)
+        for i in range(len(self.rom_data)):
+            self.memory[i+512] = self.rom_data[i]
         
 
 
 
-    def emulateCycle():
+    def emulateCycle(self,pc):
         ''' This Function will trigger the Fetch, Decode and Execute operation of 
             one opcode which is specified by the address form the PC, since the Chip8
             has the opcode of 2 bytes so we will run it FDE cycle twiced '''
+        
+        # Feteching the opcode and create 16 bit form  2 * 8 bit..
+        self.opcode = self.memory[pc]<<8 | self.memory[pc+1]
+        # Decoding OpCode.. 
+        self.var = opcode & 0xF000
+
+        if(self.var == hex(0xa000)):
+            
+
+
         pass
 
 
