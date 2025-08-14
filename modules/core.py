@@ -1,5 +1,5 @@
 from def_memory import *
-
+import random
 
 class Chip8():
     def __init__(self):
@@ -165,7 +165,43 @@ class Chip8():
                 self.v[X] = self.v[X] & self.v[Y]
             elif N==3 :
                 self.v[X] = self.v[X] ^ self.v[Y]
+            elif N ==4 :
+                # Do summ and generate caryy if there is any 
+                sum = self.v[X] + self.v[Y]
+                if sum > 255:
+                    self.v[0xF] = 1 
+                else :
+                    self.v[0xF] = 0
+                self.v[X] = sum & 0xFF
+            elif N ==5 :
+                if self.v[X] >self.v[Y]:
+                    self.v[0xF] =1 
+                else :
+                    self.v[0xF] = 0
+                self.v[X] -= self.v[Y]
+                self.v[X] & 0xFF # Potential Error 
+            elif N ==6:
+                self.v[0xF] = self.v[X] & 0x1
+                self.v[X] >>= 1
+            elif N ==7 :
+                self.v[0xF] = 1 if self.v[Y] > self.v[X] else 0
+                self.v[X] = (self.v[Y] - self.v[X]) & 0xFF
+            elif N ==0x000E :
+                self.v[0xF] = (self.v[X] & 0x80) >> 7
+                self.v[X] = (self.v[X] << 1) & 0xFF
+        elif first_nibble == 0x9000:
+            if self.v[X] != self.v[Y]:
+                self.pc +=2
+
+        elif first_nibble == 0xA000:
+            self.I = NNN
+        elif first_nibble == 0xB000:
+            self.pc = NNN +self.v[0]
+        elif first_nibble == 0xC000:
+            self.v[X] = random.randint(0, 255) & NN
+        elif first_nibble == 0xD000:
             
+
             
 
 
