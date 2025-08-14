@@ -8,10 +8,16 @@ class Chip8():
         self.I = reg_index
         self.sp = reg_stackPointer
         self.memory = memory
-        self.chipfontset = [1,12]
+        self.stack = stack
+        self.v = bytearray(16) # TODO Do type checking before uploading 
+        # self.chipfontset = [1,12]
         # also including timers
         self.sound_timer = reg_soundTimer
         self.delay_timer = reg_delayTimer
+        # Dont Want to poplulate these all over the palce 
+        self.screen = [0] * (64*32)
+        self.draw_flag =False
+        self.key = [0] * 16 
 
 
 
@@ -37,7 +43,7 @@ class Chip8():
     
     def loadfontset(self):
         ''' Have to load the font-set into memory so that we can read the font and render it..'''
-        fontset = [
+        self.fontset = [
             0xF0, 0x90, 0x90, 0x90, 0xF0,  # 0
             0x20, 0x60, 0x20, 0x20, 0x70,  # 1
             0xF0, 0x10, 0xF0, 0x80, 0xF0,  # 2
@@ -108,11 +114,65 @@ class Chip8():
         first_nibble = opcode & 0xF000
 
         # Execution Begins
+        if first_nibble == 0x0000:
+            if NN == 0x00E0:
+                # Clearing the Screen 
+                self.screen = [0]*(64*32)
+                self.draw_flag =True    
+
+            elif NN == 0x00EE:
+                # Returning After Resolving a subroutine 
+                self.sp -= 1  # !! this might cause a problem !!!! May be not 
+                self.pc = self.stack[self.sp]
+            else:
+                pass
+        elif first_nibble == 0x1000:
+            # Jumping the programm to the NNN address 
+            self.pc = NNN
+        
+        elif first_nibble == 0x2000:
+            # Starting a subroutine form address NNN
+            self.stack[self.sp] = self.pc 
+            self.sp +=1
+            self.pc = NNN
+        elif first_nibble == 0x3000:
+            # Skeip if Register vX is equal to NNJ
+            if self.v[X] == NN:
+                self.pc +=2    
+        
+        elif first_nibble == 0x4000:
+            # Tf why those goonners have 2 different condition of else logic (DO SOME SEARCH)
+            if self.v[X] != NN:
+                self.pc +=2
+        
+        elif first_nibble == 0x5000:
+            # If value of Vx is equal to Vy then skip 
+            if self.v[X] == self.v[Y]:
+                self.pc+=2
+        elif first_nibble == 0x6000:
+            # store the number in Vx
+            self.v[X] = NN
+        elif first_nibble == 0x7000:
+            # Add NN to Vx register 
+            self.v[X] += NN
+        elif first_nibble == 0x8000:
+            if N ==0 :
+                self.v[X]=self.v[Y]
+        # Some logical operations are about to begin
+            elif N ==1:
+                self.v[X] = self.v[X] | self.v[Y]
+            elif N ==2 :
+                self.v[X] = self.v[X] & self.v[Y]
+            elif N==3 :
+                self.v[X] = self.v[X] ^ self.v[Y]
+            
+            
+
 
         
 
 
 
-        pass
+        
 
 
