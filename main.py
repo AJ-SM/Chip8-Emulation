@@ -1,5 +1,6 @@
 
 import sys 
+
 from modules.core import Chip8
 from modules.renderer import draw_to_console
 import time 
