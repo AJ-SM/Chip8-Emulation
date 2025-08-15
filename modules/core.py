@@ -200,12 +200,7 @@ class Chip8():
         elif first_nibble == 0xC000:
             self.v[X] = random.randint(0, 255) & NN
         elif first_nibble == 0xD000:
-            
-
-            
-
-
-        
+            print()
 
 
 
