@@ -6,16 +6,13 @@ from modules.renderer import draw_to_console
 import time 
 
 def main():
-    """Main function to set up and run the emulator."""
-    if len(sys.argv) < 2:
-        print("Usage: python chip8_emulator.py <path_to_rom>")
-        sys.exit(1)
 
-    rom_path = sys.argv[1]
+
+    rom_path = r"D:\CLEAN_CODE\Projects\Chip8Emu\Chip8-Emulation\roms\15 Puzzle [Roger Ivie].ch8"
 
     # Initialize the Chip8 system
     chip8 = Chip8()
-    chip8.load_rom(rom_path)
+    chip8.loadRom(rom_path)
 
 
 
@@ -24,7 +21,7 @@ def main():
     while True:
         try:
             # Emulate one cycle
-            chip8.emulate_cycle()
+            chip8.emulateCycle()
 
             # If the draw flag is set, render the screen
             if chip8.draw_flag:

@@ -14,7 +14,7 @@ no_keys:int = 16
     Since our Each Instruction is of 1 byte (8bits) so we need some data type to store 2^8 (256) 
     instruction and uint8 = UnsignedIntegerOf8bits (0~255)- (00~FF) seems to be the great choice  '''
 
-memory = np.array(max_memo*1024).astype(np.uint8)
+memory = [0] * 4096
 stack = np.array(stackLength).astype(np.uint8)
 hex_keypad = np.array(16)
 opcode = 0000
@@ -24,6 +24,7 @@ opcode = 0000
 
 reg_index= np.uint16(0)
 reg_pc= np.uint16(0) 
+
 reg_delayTimer = np.uint16(0)
 reg_soundTimer = np.uint16(0) # Won't Be using it probably
 reg_stackPointer = np.uint(0) # just indexs of the stack 
@@ -116,20 +117,20 @@ class Chip8():
             memory address 0x200 (512) onward just iterating on the file and storing 
             the data in memory '''
         
-        self.rom_data = open(path)
-        for i in range(len(self.rom_data)):
-            self.memory[i+512] = self.rom_data[i]
+        self.rom_data = open(path,"rb").read()
+        for i, byte in enumerate(self.rom_data):
+            self.memory[0x200 + i] = byte
         
 
 
 
-    def emulateCycle(self,pc):
+    def emulateCycle(self):
         ''' This Function will trigger the Fetch, Decode and Execute operation of 
             one opcode which is specified by the address form the PC, since the Chip8
             has the opcode of 2 bytes so we will run it FDE cycle twiced '''
         
         # Feteching the opcode and create 16 bit form  2 * 8 bit..
-        self.opcode = self.memory[pc]<<8 | self.memory[pc+1]
+        self.opcode = self.memory[self.pc]<<8 | self.memory[self.pc+1]
         self.Decode_Execute(opcode)
 
         if self.sound_timer >0:
