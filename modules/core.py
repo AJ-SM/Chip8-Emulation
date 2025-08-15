@@ -192,7 +192,7 @@ class Chip8():
         elif first_nibble == 0x9000:
             if self.v[X] != self.v[Y]:
                 self.pc +=2
-
+        
         elif first_nibble == 0xA000:
             self.I = NNN
         elif first_nibble == 0xB000:
@@ -200,7 +200,30 @@ class Chip8():
         elif first_nibble == 0xC000:
             self.v[X] = random.randint(0, 255) & NN
         elif first_nibble == 0xD000:
-            print()
+           # Set collision flag to zero 
+           self.v[0xF] = 0 
+           # Get Coordinates form Vx and Vy 
+           x_ = self.v[X]
+           y_= self.v[Y]
+           height = N 
+
+           for y in range(y_):
+               pixel_r = self.memory[self.I+y]
+               for x in range(8):
+                   # width is fixed for 8 pixels
+                   if (pixel_r & (0x80 >> x))!=0:
+                        d_x = (x + x_)%64
+                        d_y = (y + y_)%32
+                        index = d_x (d_y*64)
+                        if self.gfx[index] == 1:
+                           # if the pixel is already one then there must be a collision
+                           # turn on the collision flag 
+                           self.v[0xF] = 1 
+                        self.gfx[index] ^= 1
+               self.draw_flag = True
+                       
+                   
+
 
 
 
