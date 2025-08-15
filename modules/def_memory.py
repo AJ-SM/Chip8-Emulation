@@ -1,4 +1,5 @@
 import numpy as np 
+from def_memory import *
 from typing import * # Remove this to specifinces Before Pushing anywhere 
 
 # Some CPU sepcific initial data

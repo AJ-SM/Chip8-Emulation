@@ -221,7 +221,61 @@ class Chip8():
                            self.v[0xF] = 1 
                         self.gfx[index] ^= 1
                self.draw_flag = True
-                       
+
+        elif first_nibble == 0xE000:
+            last_byte = opcode & 0x00FF
+            if last_byte == 0x009E:
+                if self.key[self.v[X]] !=0:
+                    self.pc +=2
+            elif last_byte == 0x00A1:
+                if self.key[self.v[X]] == 0 :
+                    self.pc +=2
+        
+        elif first_nibble == 0x000F:
+            last_byte = opcode & 0x00FF
+
+            if last_byte == 0x0007:
+                self.v[X] = self.delay_timer
+            elif last_byte == 0x000A:
+                key_pressed = False
+                for i in range(16):
+                            if self.key[i] != 0:
+                                self.v[X] = i
+                                key_pressed = True
+                        # If no key was pressed, repeat this instruction by decrementing PC
+                if not key_pressed:
+                    self.pc -= 2
+            
+            elif last_byte == 0x0015:
+                self.delay_timer = self.v[X]
+            
+            elif last_byte == 0x0018:
+                self.sound_timer = self.v[X]
+            
+            elif last_byte == 0x001E:
+                self.I += self.v[X]
+
+            elif last_byte == 0x0029:
+                self.I = self.v[X]*5
+            
+            elif last_byte == 0x0033:
+                val = self.v[X]
+                self.memory[self.I] = val // 100
+                self.memory[self.I + 1] = (val // 10)%10
+                self.memory[self.I + 2] = val % 10
+            
+            elif last_byte == 0x0055:
+                for i in range (X+1):
+                    self.memory[self.I +i ]= self.v[i]
+            
+            elif last_byte == 0x0065:
+                for i in range(X+1):
+                    self.v[i] =self.memory[self.I +i]
+        
+        else :
+            print(" Given Oppcode is invaliad")
+
+                        
                    
 
 
