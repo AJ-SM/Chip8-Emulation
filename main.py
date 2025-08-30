@@ -1,20 +1,16 @@
 
 import sys 
-
 from modules.core import Chip8
 from modules.renderer import draw_to_console
 import time 
 
 def main():
-
-
+    # Kept your original hardcoded ROM path
     rom_path = r"D:\CLEAN_CODE\Projects\Chip8Emu\Chip8-Emulation\roms\15 Puzzle [Roger Ivie].ch8"
 
     # Initialize the Chip8 system
     chip8 = Chip8()
     chip8.loadRom(rom_path)
-
-
 
     print(f"Starting emulation of '{rom_path}'. Press Ctrl+C to exit.")
     
@@ -42,3 +38,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
